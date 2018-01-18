@@ -1,5 +1,5 @@
 /**
- *	@file reference.cpp
+ *	@file md_configence.cpp
  *  @author shuaiw
  */
 #include <iostream>
@@ -17,7 +17,7 @@ using namespace std;
 #include <signal.h>
 
 /*
- * 辅助函数: 读取配置文件refer.ini
+ * 辅助函数: 读取配置文件md_config.ini
  */
 
 static char USERID[MEMB_SIZEOF(CXeleMdFtdcReqUserLoginField, UserID)];
@@ -36,31 +36,31 @@ static void loadConfigFile(char *iniName) {
     /*
      * load USERID
      */
-    FILE *ini = popen("sed 's/USERID=\\(.*\\)/\\1/g;tx;d;:x' refer.ini", "r");
+    FILE *ini = popen("sed 's/USERID=\\(.*\\)/\\1/g;tx;d;:x' md_config.ini", "r");
     fscanf(ini, "%s\n", USERID);
     pclose(ini);
     /*
      * load PASSWD
      */
-    ini = popen("sed 's/PASSWD=\\(.*\\)/\\1/g;tx;d;:x' refer.ini", "r");
+    ini = popen("sed 's/PASSWD=\\(.*\\)/\\1/g;tx;d;:x' md_config.ini", "r");
     fscanf(ini, "%s\n", PASSWD);
     pclose(ini);
     /*
      * load FRONTADDRESS
      */
-    ini = popen("sed 's/FRONTADDRESS=\\(.*\\)/\\1/g;tx;d;:x' refer.ini", "r");
+    ini = popen("sed 's/FRONTADDRESS=\\(.*\\)/\\1/g;tx;d;:x' md_config.ini", "r");
     fscanf(ini, "%s\n", FRONTADDRESS);
     pclose(ini);
     /*
      * load MCASTADDRESS
      */
-    ini = popen("sed 's/MCASTADDRESS=\\(.*\\)/\\1/g;tx;d;:x' refer.ini", "r");
+    ini = popen("sed 's/MCASTADDRESS=\\(.*\\)/\\1/g;tx;d;:x' md_config.ini", "r");
     fscanf(ini, "%s\n", MCASTADDRESS);
     pclose(ini);
     /*
      * load NIC
      */
-    ini = popen("sed 's/NIC=\\(.*\\)/\\1/g;tx;d;:x' refer.ini", "r");
+    ini = popen("sed 's/NIC=\\(.*\\)/\\1/g;tx;d;:x' md_config.ini", "r");
     fscanf(ini, "%s\n", NIC);
     pclose(ini);
 
@@ -124,7 +124,7 @@ void *job_recv_market_data(void *arg) {
 
 int main(int argc, char *argv[]) {
     /*
-     * 读取refer.ini
+     * 读取md_config.ini
      */
     loadConfigFile(NULL);
 
