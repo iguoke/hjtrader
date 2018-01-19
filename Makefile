@@ -3,7 +3,6 @@ INCL=-I. -Iinclude
 LDFLAGS:= -pthread -lrt
 
 TARGET:= userdemo_shfe
-
 all: $(TARGET)
 
 userdemo_shfe: userdemo_shfe.cpp
