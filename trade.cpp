@@ -36,7 +36,9 @@ class CXeleTraderSpi
 		char g_AccountID_str[MEMB_SIZEOF(CXeleFtdcQryClientAccountField,
 					AccountID)];
 		char g_FrontAddress_str[80];
-     
+    
+		CXeleTraderApi* pTraderApi;
+		int logintimes;
 		/*
 		 * 辅助函数: 读取配置文件refer.ini
 		 */
@@ -85,19 +87,41 @@ class CXeleTraderSpi
 		  fprintf (stdout, "FRONTADDRESS:%s\n", g_FrontAddress_str);
 		}
 	public:
+		CXeleTraderSpi()
+		{
+			logintimes=0;
+		}
 		void Init()
 		{
 			loadConfigFile((char*) "md_config.ini");
 			int exchangeId=1;
-			CXeleTraderApi* pTraderApi=CXeleTraderApi::CreateTraderApi(exchangeID);
+			pTraderApi=CXeleTraderApi::CreateTraderApi(exchangeID);
 			assert(pTraderApi);
-
+			pTraderApi->RegisterSpi(this);
+			pTraderApi->RegisterFront(g_FrontAddress_str);
+			pTraderApi->SubscribePrivateTopic(XELE_TERT_RESTART);
+	
+			pTraderApi->SubscribePrivateTopic(XELE_TERT_RESTART);
+			pTraderApi->Init();
+			fprintf(stdout,"%s\n",pTraderApi->GetVersion());
+		}
+		void Login()
+		{
+			CXeleFtReqUserLoginField req;
+			memset(req,0,sizeof(req));
+			snprintf(req->UserID,sizeof(req->UserID),g_UserID_str);
+			snprintf(req->ParticipantID,sizeof(req->ParticipantID),"%s",g_ParticipantID_str);
+			req->DataCenterID=25;
 		}
 public:
     ///当客户端与交易后台建立起通信连接时（还未登录前），该方法被调用。
     virtual void OnFrontConnected()
     {
-		
+		fprintf(stdout,"{%s}\n",__FUNCTION__);
+		if(logintimes<3)
+		{
+			
+		}
     }
 
     ///当客户端与交易后台通信连接断开时，该方法被调用。当发生这个情况后，API会自动重新连接，客户端可不做处理。
